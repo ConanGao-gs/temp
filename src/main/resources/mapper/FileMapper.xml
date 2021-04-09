@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.conangao.server.mapper.FileMapper">
+
+    <resultMap id="BaseResult" type="org.conangao.server.entity.MyFile">
+        <id property="id" column="id"></id>
+        <result property="fileSize" column="file_size"></result>
+        <result property="fileType" column="file_type"></result>
+        <result property="fileOriginalName" column="file_originalname"></result>
+        <result property="createdon" column="createdon"></result>
+        <result property="fileSaveAddress" column="file_saveaddress"></result>
+    </resultMap>
+
+    <sql id="BaseSql">
+        id,file_size,file_type,file_originalname,createdon,file_saveaddress
+    </sql>
+
+    <select id="testConnect" resultType="org.conangao.server.entity.MyFile">
+        select <include refid="BaseSql"></include>
+        from gs_file
+    </select>
+</mapper>
