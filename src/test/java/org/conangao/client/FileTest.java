@@ -14,6 +14,7 @@ import java.util.Map;
 @SpringBootTest
 public class FileTest {
 
+    //region http封装类的测试
     /**
      * 发送get请求
      */
@@ -119,4 +120,6 @@ public class FileTest {
             os.write(res.getByteContent());
         }
     }
+    // endregion
+
 }
