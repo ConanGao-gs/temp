@@ -6,13 +6,13 @@
         <id property="id" column="id"></id>
         <result property="fileSize" column="file_size"></result>
         <result property="fileType" column="file_type"></result>
-        <result property="fileOriginalName" column="file_originalname"></result>
+        <result property="fileOriginalName" column="file_original_name"></result>
         <result property="createdon" column="createdon"></result>
-        <result property="fileSaveAddress" column="file_saveaddress"></result>
+        <result property="fileSaveAddress" column="file_save_address"></result>
     </resultMap>
 
     <sql id="BaseSql">
-        id,file_size,file_type,file_originalname,createdon,file_saveaddress
+        id,file_size,file_type,file_original_name,createdon,file_save_address
     </sql>
 
     <select id="testConnect" resultType="org.conangao.server.entity.MyFile">
