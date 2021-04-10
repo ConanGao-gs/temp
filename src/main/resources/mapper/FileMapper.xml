@@ -12,11 +12,20 @@
     </resultMap>
 
     <sql id="BaseSql">
-        id,file_size,file_type,file_original_name,createdon,file_save_address
+        id,file_size,file_type,file_original_name,createdon,file_save_address,file_uuid
     </sql>
+
+    <insert id="fileUpload">
+        insert into gs_file (file_size,file_type,file_original_name,createdon,file_save_address,file_uuid)
+        values (#{fileSize},#{fileType},#{fileOriginalName},#{createdon},#{fileSaveAddress},#{fileUUID});
+    </insert>
 
     <select id="testConnect" resultType="org.conangao.server.entity.MyFile">
         select <include refid="BaseSql"></include>
         from gs_file
+    </select>
+
+    <select id="getFileByUUID" resultType="org.conangao.server.entity.MyFile">
+        select <include refid="BaseSql"></include> from gs_file where file_uuid = #{uuid}
     </select>
 </mapper>

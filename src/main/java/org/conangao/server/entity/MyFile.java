@@ -23,4 +23,6 @@ public class MyFile {
     private String createdon;
     /*文件保存目录地址*/
     private String fileSaveAddress;
+    /*文件UUID*/
+    private String fileUUID;
 }
