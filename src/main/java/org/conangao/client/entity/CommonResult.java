@@ -18,4 +18,10 @@ public class CommonResult<T> {
     private String message;
     /*携带的数据*/
     private T data;
+
+    public CommonResult(Integer code, String message){
+        this.code = code;
+        this.message = message;
+        this.data = null;
+    }
 }

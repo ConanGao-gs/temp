@@ -1,7 +1,7 @@
 package org.conangao.client.entity;
 
-import java.io.IOException;
-import java.io.OutputStream;
+import javax.activation.MimetypesFileTypeMap;
+import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashMap;
@@ -154,7 +154,6 @@ public class MyRequest {
         return request();
     }
 
-
     /**
      * 以DELETE方式访问
      * ！会覆盖之前设置的method
@@ -269,7 +268,6 @@ public class MyRequest {
      * @throws IOException
      */
     private void setRequestProperties(HttpURLConnection conn) throws IOException {
-
         conn.setDoInput(doInput);
         conn.setDoOutput(doOutput);
         conn.setUseCaches(useCaches);
@@ -296,9 +294,28 @@ public class MyRequest {
 
             OutputStream os = conn.getOutputStream();
 
-            os.write(toPostDataString().getBytes());
+            String contentType = headers.get("Content-Type");
+            if (contentType != null && contentType.contains("multipart/form-data")) {
+                File file = new File((String) postData.get("upfile"));
+                String filename = file.getName();
+                StringBuffer strBuf = new StringBuffer();
+                String BOUNDARY = "---------------------------123821742118716";
+                strBuf.append("\r\n").append("--").append(BOUNDARY).append("\r\n");
+                strBuf.append("Content-Disposition: form-data; name=\"" + "upfile" + "\"; filename=\"" + filename + "\"\r\n");
+                strBuf.append("Content-Type:" + filename.substring(filename.indexOf(".")+1) + "\r\n\r\n");
+                os.write(strBuf.toString().getBytes());
+                DataInputStream in = new DataInputStream(new FileInputStream(file));
+                int bytes = 0;
+                byte[] bufferOut = new byte[1024];
+                while ((bytes = in.read(bufferOut)) != -1) {
+                    os.write(bufferOut, 0, bytes);
+                }
+                byte[] endData = ("\r\n--" + BOUNDARY + "--\r\n").getBytes();
+                os.write(endData);
+            }else {
+                os.write(toPostDataString().getBytes());
+            }
             os.flush();
-
         }
     }
 

@@ -15,6 +15,7 @@ import java.util.Map;
 public class FileTest {
 
     //region http封装类的测试
+
     /**
      * 发送get请求
      */
@@ -34,7 +35,6 @@ public class FileTest {
             System.out.println(res.getText());
         }
     }
-
 
     /**
      * 发送post请求并携带表单数据
@@ -122,4 +122,75 @@ public class FileTest {
     }
     // endregion
 
+    /**
+     * 文件上传
+     */
+    @Test
+    public void fileUpload() throws IOException {
+        String inputValue = "D:/1.png";
+        File file = new File(inputValue);
+        String inputName = "upfile";
+        String filename = file.getName();
+        // boundary就是request头和上传文件内容的分隔符
+        String BOUNDARY = "---------------------------123821742118716";
+        MyResponse res = MyRequest.builder()
+                .setUrl("http://localhost:8081/file/uploadServer")
+                .setReadTimeout(30000)
+                .setConnectTimeout(5000)
+                .setDoInput(true)
+                .setDoOutput(true)
+                .addHeader("Connection", "Keep-Alive")
+                .addHeader("Content-Type", "multipart/form-data; boundary=" + BOUNDARY)
+                .addPostData("upfile", inputValue)
+                .post();
+        if (res.getResponseCode() == 200) {
+            System.out.println(res.getText());
+        }
+    }
+
+    /**
+     * 下载测试
+     */
+    @Test
+    public void fileDownload() throws IOException {
+        MyResponse res = MyRequest.builder()
+                .setUrl("http://localhost:8081/file/download/9d60e543-0f08-46db-af92-499287b9ac92")
+                .setReadTimeout(30000)
+                .setConnectTimeout(5000)
+                .setDoInput(true)
+                .setDoOutput(true)
+                .addHeader("Connection", "Keep-Alive")
+                .get();
+        if (res.getResponseCode() == 200) {
+            String downDir = System.getProperty("user.dir") + "\\download";
+            File file = new File(downDir);
+            if(!file.exists() &&!file.isDirectory()){
+                file.mkdirs();
+            }
+            File filedir = new File(downDir + "\\9d60e543-0f08-46db-af92-499287b9ac92." + res.getContentType());
+            if (!filedir.exists()){
+                filedir.createNewFile();
+            }
+            FileOutputStream fileOutputStream = new FileOutputStream(filedir);
+            fileOutputStream.write(res.getByteContent());
+            fileOutputStream.close();
+        }
+    }
+
+    /**
+     * 获取元数据
+     */
+    @Test void getMetaData(){
+        MyResponse res = MyRequest.builder()
+                .setUrl("http://localhost:8081/file/getMetadata/9d60e543-0f08-46db-af92-499287b9ac92")
+                .setReadTimeout(30000)
+                .setConnectTimeout(5000)
+                .setDoInput(true)
+                .setDoOutput(true)
+                .addHeader("Connection", "Keep-Alive")
+                .get();
+        if (res.getResponseCode() == 200) {
+            System.out.println(res.getText());
+        }
+    }
 }
